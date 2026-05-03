@@ -6,7 +6,7 @@
 
 ## Lead implementer
 
-- **[@yangheeseok1](https://github.com/yangheeseok1)** — Original implementations of the two predecessor MCPs (`fiscal-api-mcp-` and `lofin-api-mcp`) merged into this project.
+- **[@yangheeseok1](https://github.com/yangheeseok1)** (Heeseok Yang, KEI) — Original author and implementer of both predecessor MCPs (`fiscal-api-mcp-` and `lofin-api-mcp`) merged into this project. Substantially all of the API client, catalog, and tool logic in `src/kofin/` and `src/lofin/` is his work.
 
 ## Acknowledgments
 
