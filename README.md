@@ -58,7 +58,7 @@ Set **at least one** in `.env`. Tools for a subsystem only register if its key i
 | Variable | Required for | Get from · 발급처 |
 |---|---|---|
 | `OPENFISCAL_API_KEY` | `kofin_*` tools | [openfiscaldata.go.kr](https://openfiscaldata.go.kr) → 마이페이지 → OpenAPI 신청 |
-| `LOFIN_API_KEY` | `lofin_*` tools | [lofin.mois.go.kr](https://lofin.mois.go.kr/portal/user/openApi.do) → 회원가입 → OpenAPI 인증키 신청 |
+| `LOFIN_API_KEY` | `lofin_*` tools | [지방재정365 개발자공간](https://lofin.mois.go.kr/portal/user/openApi.do?code=bbs&depCd=&leftCd=13&subCd=12) → 회원가입 → OpenAPI 인증키 신청. 사이트 접속 안 되면 행안부 지방재정365 담당 ☎ 044-205-3739 / 02-2031-9621. 동일 데이터셋 일부는 [공공데이터포털](https://www.data.go.kr)에도 등록되어 있지만 lofin 서비스코드 체계는 본 포털 키로만 사용 가능. |
 | `DATAGOKR_API_KEY` | optional · 선택 (kofin 보조) | [data.go.kr](https://data.go.kr) |
 | `NABOSTATS_API_KEY` | optional · 선택 (kofin 보조) | [nabo.go.kr](https://www.nabo.go.kr) |
 
