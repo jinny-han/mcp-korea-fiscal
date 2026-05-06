@@ -171,12 +171,13 @@ Both subsystems share a common resilience layer (`src/common/resilient-fetch.ts`
 
 ## Authors & origin · 작성자 및 출처
 
-This project is a unified merge of two predecessor MCPs. See [CONTRIBUTORS.md](./CONTRIBUTORS.md) for full attribution.
+This project unifies two predecessor MCPs (each authored by @yangheeseok1) into a new merged architecture with a shared resilience layer authored by @jinny-han. See [CONTRIBUTORS.md](./CONTRIBUTORS.md) for full attribution.
 
-> 두 개의 선행 MCP를 합친 프로젝트입니다. 상세 attribution은 [CONTRIBUTORS.md](./CONTRIBUTORS.md) 참고.
+> 두 선행 MCP는 인턴(@yangheeseok1)이 각각 만들었고, 이 repo의 **통합 작업** (구조 설계, `src/common/`, README, 문서, 테스트 등)은 @jinny-han이 작성했습니다. 상세 내용 [CONTRIBUTORS.md](./CONTRIBUTORS.md) 참고.
 
-- **Project lead** · 기획·설계: [@jinny-han](https://github.com/jinny-han) (Haejin Han, [Korea Environment Institute](https://www.kei.re.kr))
-- **Lead implementer** · 구현: [@yangheeseok1](https://github.com/yangheeseok1)
+- **Project lead & merge author** · 기획·통합 작성: [@jinny-han](https://github.com/jinny-han) (Haejin Han, [Korea Environment Institute](https://www.kei.re.kr))
+- **Original implementer of predecessor MCPs** · 선행 MCP 원저자: [@yangheeseok1](https://github.com/yangheeseok1)
+- **AI pair programmer** · AI 페어 프로그래머: Claude (Anthropic) — used during v0.1.x merge & refactoring
 
 ---
 
