@@ -60,8 +60,7 @@ These are **intentionally deferred** — do not silently expand scope. Pick one 
 1. **`vitest.config.ts` unification** (~15 min)
    Currently no test runner config at top level. Each predecessor had its own vitest config. Merge or pick one and validate `npm test` runs cleanly.
 
-2. **Extract shared HTTP/error/cache logic to `src/common/`** (1–3 hours, careful work)
-   Both subsystems independently implement: retry (p-retry), circuit breaker (opossum), concurrency limit (p-limit), in-memory cache, error normalization for 200-OK error responses, pagination. Identify truly common parts, extract, refactor both subsystems to use the common module. Use `superpowers:writing-plans` skill before touching code.
+2. ~~**Extract shared HTTP/error/cache logic to `src/common/`**~~ — done in v0.1.1. See `src/common/{cache,resilient-fetch,result-code}.ts` and tests under `tests/common/`. Both subsystems now go through `createResilientFetcher` and `createTtlCache`.
 
 3. **Tool description cross-references audit**
    `sed` only renamed lowercase tool name strings (`fiscal_search` → `kofin_search` / `lofin_search`). Some help text or error hints may still reference old names in mixed contexts. Compile passes but UX may be confusing. Manual review pass.
