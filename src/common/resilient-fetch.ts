@@ -19,6 +19,8 @@ export interface ResilientFetcherOptions {
   resetTimeout?: number;
   /** Total timeout per attempt in ms. Default 16000. */
   timeout?: number;
+  /** Min number of requests before breaker can trip. Default 5 — prevents single-failure trip during retries. */
+  volumeThreshold?: number;
 }
 
 export interface ResilientFetcher {
@@ -45,28 +47,16 @@ export function createResilientFetcher(opts: ResilientFetcherOptions): Resilient
     errorThresholdPercentage = 50,
     resetTimeout = 30_000,
     timeout = 16_000,
+    volumeThreshold = 5,
   } = opts;
 
-  // The breaker wraps the full retry sequence. This way individual transient
-  // failures don't trip the breaker — only exhausted retries count against it.
-  // ctx carries the work function + retry options so the breaker stays generic.
   const breaker = new CircuitBreaker(
-    async (ctx: {
-      work: () => Promise<unknown>;
-      retries: number;
-      retryDelayMin: number;
-      retryDelayMax: number;
-    }) =>
-      pRetry(() => ctx.work(), {
-        retries: ctx.retries,
-        minTimeout: ctx.retryDelayMin,
-        maxTimeout: ctx.retryDelayMax,
-        randomize: true,
-      }),
+    async (ctx: { work: () => Promise<unknown> }) => ctx.work(),
     {
       timeout,
       errorThresholdPercentage,
       resetTimeout,
+      volumeThreshold,
       name: breakerName,
       // AbortError = terminal; do not count against breaker stats
       errorFilter: (err: unknown) => err instanceof AbortError,
@@ -82,12 +72,12 @@ export function createResilientFetcher(opts: ResilientFetcherOptions): Resilient
       if (existing) return existing as Promise<T>;
 
       const promise = limit(() =>
-        breaker.fire({
-          work,
+        pRetry(() => breaker.fire({ work }) as Promise<T>, {
           retries,
-          retryDelayMin,
-          retryDelayMax,
-        }) as Promise<T>,
+          minTimeout: retryDelayMin,
+          maxTimeout: retryDelayMax,
+          randomize: true,
+        }),
       ).finally(() => {
         inflight.delete(key);
       });
