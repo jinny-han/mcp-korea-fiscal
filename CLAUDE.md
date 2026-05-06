@@ -21,7 +21,7 @@ Both MIT-licensed. Substantively all of `src/kofin/` and `src/lofin/` is the ori
 ## Conventions decided
 
 - **Tool naming**: domain prefix + action — `kofin_search`, `kofin_query`, `kofin_guide`, `lofin_search`, `lofin_query`, `lofin_guide`. Six tools total. Do not rename without strong reason; users will pin to these.
-- **Subsystem isolation**: each subsystem keeps its own client/cache/catalog. `src/common/` does not exist yet (planned, see Follow-ups).
+- **Subsystem isolation**: each subsystem keeps its own response parsing, URL construction, and API key handling. Shared resilience (retry/breaker/concurrency/dedup), TTL+LRU cache, and result-code classification live in `src/common/` and are consumed via `../common/index.js` (or `../../common/index.js` from kofin's nested api/ dir).
 - **Config style**: each subsystem loads its own env-based config. Top-level `src/index.ts` only orchestrates registration with try/catch graceful degradation per subsystem.
 - **Language in user-facing text**: Korean primary, English where neutral. Code identifiers / file paths in English.
 - **License**: MIT. Copyright preserved from predecessors.
@@ -31,15 +31,20 @@ Both MIT-licensed. Substantively all of `src/kofin/` and `src/lofin/` is the ori
 ```
 src/
 ├── index.ts                    # entry; composes both subsystems via stdio
+├── common/                     # shared resilience + cache + result-code (since v0.1.1)
+│   ├── cache.ts                # createTtlCache (TTL + LRU)
+│   ├── resilient-fetch.ts      # createResilientFetcher (retry + breaker + limit + dedup)
+│   ├── result-code.ts          # classifyResultCode (INFO-XXX / ERROR-XXX → ok/empty/retryable)
+│   └── index.ts                # barrel
 ├── kofin/                      # 국가재정 (열린재정)
-│   ├── api/                    # client, cache, catalog, xml-parser
+│   ├── api/                    # client, catalog, xml-parser (uses ../../common)
 │   ├── tools/                  # kofin_guide, kofin_search, kofin_query
 │   ├── prompts/templates.ts
 │   ├── config.ts               # OPENFISCAL_API_KEY etc.
 │   └── index.ts                # exports registerKofinTools(server)
 └── lofin/                      # 지방재정 (지방재정365)
     ├── catalog.ts
-    ├── client.ts               # reads LOFIN_API_KEY at request time
+    ├── client.ts               # reads LOFIN_API_KEY at request time (uses ../common)
     ├── tools/                  # lofin_guide, lofin_search, lofin_query
     ├── _workspace/             # catalog generation tooling (gen_catalog.py)
     └── index.ts                # exports registerLofinTools(server)
